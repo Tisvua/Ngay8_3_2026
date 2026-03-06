@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Một món quà nhỏ dành cho em nhân ngày 8/3 💕">
+    <meta property="og:title" content="💕 Dành cho em...">
+    <meta property="og:description" content="Một món quà nhỏ dành cho em nhân ngày 8/3">
+    <title>💕 Dành cho em...</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* === LOCK PAGE v2 — Split Layout === */
+
+        .lock-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: 100dvh; /* dynamic viewport for mobile browsers */
+            gap: clamp(30px, 4vw, 60px);
+            padding: clamp(15px, 3vw, 40px);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- LEFT: Image Side --- */
+        .lock-left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 450px;
+            min-width: 0;
+        }
+
+        .lock-left-inner {
+            text-align: center;
+        }
+
+        .key-image {
+            width: clamp(140px, 22vw, 320px);
+            max-width: 100%;
+            animation: floatKey 4s ease-in-out infinite;
+            filter: drop-shadow(0 15px 35px rgba(255, 105, 180, 0.35));
+        }
+
+        @keyframes floatKey {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-18px) rotate(3deg); }
+        }
+
+        .lock-left-text {
+            margin-top: clamp(12px, 2vw, 25px);
+            font-size: clamp(16px, 2vw, 22px);
+            font-weight: 700;
+            color: var(--pink-accent);
+        }
+
+        .lock-left-sub {
+            margin-top: 8px;
+            font-size: clamp(12px, 1.3vw, 15px);
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* --- RIGHT: Keypad Side --- */
+        .lock-right {
+            flex: 0 0 auto;
+            width: clamp(270px, 28vw, 340px);
+        }
+
+        .keypad-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: clamp(22px, 3vw, 30px);
+            padding: clamp(22px, 3vw, 35px) clamp(18px, 2.5vw, 30px) clamp(20px, 2.5vw, 30px);
+            box-shadow: 0 12px 50px rgba(255, 105, 180, 0.22);
+            border: 2px solid rgba(255, 182, 193, 0.35);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .keypad-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.08) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        /* Icon above dots */
+        .keypad-icon {
+            width: clamp(50px, 6vw, 80px);
+            margin-bottom: clamp(8px, 1vw, 14px);
+            position: relative;
+            z-index: 1;
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .keypad-title {
+            font-size: clamp(14px, 1.5vw, 17px);
+            font-weight: 700;
+            color: var(--pink-accent);
+            margin-bottom: clamp(14px, 2vw, 22px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- 4 PIN Dots --- */
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: clamp(10px, 1.5vw, 16px);
+            margin-bottom: clamp(16px, 2vw, 25px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .pin-dot {
+            width: clamp(14px, 1.6vw, 18px);
+            height: clamp(14px, 1.6vw, 18px);
+            border-radius: 50%;
+            border: 2.5px solid var(--pink-main);
+            background: transparent;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .pin-dot.filled {
+            background: var(--pink-accent);
+            border-color: var(--pink-accent);
+            transform: scale(1.2);
+            box-shadow: 0 0 12px rgba(255, 105, 180, 0.5);
+        }
+
+        .pin-dot.error {
+            border-color: #FF1493;
+            background: #FF1493;
+            animation: dotShake 0.4s ease;
+        }
+
+        .pin-dot.success {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            box-shadow: 0 0 12px rgba(76, 175, 80, 0.5);
+            animation: dotPop 0.3s ease;
+        }
+
+        @keyframes dotShake {
+            0%, 100% { transform: translateX(0) scale(1.2); }
+            20%, 60% { transform: translateX(-5px) scale(1.2); }
+            40%, 80% { transform: translateX(5px) scale(1.2); }
+        }
+
+        @keyframes dotPop {
+            0% { transform: scale(1.2); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1.2); }
+        }
+
+        /* --- Number Pad --- */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(8px, 1.2vw, 12px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .numpad-btn {
+            width: clamp(52px, 5.5vw, 72px);
+            height: clamp(52px, 5.5vw, 72px);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 182, 193, 0.4);
+            background: rgba(255, 255, 255, 0.7);
+            font-family: 'Quicksand', sans-serif;
+            font-size: clamp(20px, 2.2vw, 26px);
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .numpad-btn:hover {
+            background: rgba(255, 182, 193, 0.2);
+            border-color: var(--pink-accent);
+            transform: scale(1.08);
+        }
+
+        .numpad-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 105, 180, 0.15);
+        }
+
+        .numpad-btn.action {
+            font-size: clamp(16px, 1.8vw, 20px);
+            color: var(--pink-accent);
+            border-color: transparent;
+            background: transparent;
+        }
+
+        .numpad-btn.action:hover {
+            background: rgba(255, 182, 193, 0.15);
+        }
+
+        /* Error message */
+        .error-msg {
+            font-size: clamp(11px, 1.2vw, 13px);
+            color: var(--pink-deep);
+            margin-top: clamp(10px, 1.2vw, 15px);
+            position: relative;
+            z-index: 1;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-weight: 600;
+        }
+
+        .error-msg.show {
+            opacity: 1;
+        }
+
+        .lock-hint {
+            font-size: clamp(10px, 1.1vw, 12px);
+            color: var(--text-light);
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+        }
+
+        .lock-hint span {
+            color: var(--pink-accent);
+        }
+
+        /* Heart Burst Effect */
+        .heart-burst {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+            display: none;
+        }
+
+        .heart-burst.active {
+            display: block;
+        }
+
+        .burst-heart {
+            position: absolute;
+            font-size: 30px;
+        }
+
+        /* Success overlay */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 240, 245, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .success-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-overlay .success-heart {
+            font-size: clamp(50px, 8vw, 80px);
+            animation: heartbeat 0.8s ease-in-out infinite;
+        }
+
+        .success-overlay .success-text {
+            font-size: clamp(18px, 3vw, 22px);
+            color: var(--pink-accent);
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        /* ===== RESPONSIVE — TABLET (≤ 1024px) ===== */
+        @media (max-width: 1024px) {
+            .lock-layout {
+                gap: 40px;
+                padding: 25px;
+            }
+
+            .key-image {
+                width: clamp(160px, 25vw, 260px);
+            }
+
+            .lock-right {
+                width: 300px;
+            }
+
+            .numpad-btn {
+                width: 66px;
+                height: 66px;
+                font-size: 24px;
+            }
+        }
+
+        /* ===== RESPONSIVE — SMALL TABLET / LARGE PHONE (≤ 820px) ===== */
+        @media (max-width: 820px) {
+            .lock-layout {
+                flex-direction: column;
+                gap: 24px;
+                padding: 20px;
+                justify-content: center;
+            }
+
+            .lock-left {
+                max-width: 100%;
+            }
+
+            .key-image {
+                width: 180px;
+            }
+
+            .lock-left-text {
+                font-size: 18px;
+                margin-top: 14px;
+            }
+
+            .lock-left-sub {
+                font-size: 13px;
+            }
+
+            .lock-right {
+                width: min(300px, 90vw);
+            }
+
+            .numpad-btn {
+                width: 64px;
+                height: 64px;
+                font-size: 23px;
+            }
+
+            .numpad-btn.action {
+                font-size: 18px;
+            }
+        }
+
+        /* ===== RESPONSIVE — PHONE (≤ 600px) ===== */
+        @media (max-width: 600px) {
+            .lock-layout {
+                gap: 18px;
+                padding: 16px 12px;
+                min-height: 100dvh;
+            }
+
+            .key-image {
+                width: 140px;
+            }
+
+            .lock-left-text {
+                font-size: 16px;
+                margin-top: 10px;
+            }
+
+            .lock-left-sub {
+                font-size: 12px;
+                margin-top: 4px;
+            }
+
+            .lock-right {
+                width: min(290px, 88vw);
+            }
+
+            .keypad-card {
+                padding: 22px 18px 20px;
+                border-radius: 24px;
+            }
+
+            .keypad-icon {
+                width: 55px;
+                margin-bottom: 8px;
+            }
+
+            .keypad-title {
+                font-size: 15px;
+                margin-bottom: 16px;
+            }
+
+            .pin-dots {
+                gap: 12px;
+                margin-bottom: 18px;
+            }
+
+            .pin-dot {
+                width: 15px;
+                height: 15px;
+            }
+
+            .numpad {
+                gap: 10px;
+            }
+
+            .numpad-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 22px;
+            }
+
+            .numpad-btn.action {
+                font-size: 17px;
+            }
+
+            .error-msg {
+                font-size: 12px;
+                margin-top: 10px;
+            }
+
+            .lock-hint {
+                font-size: 11px;
+            }
+        }
+
+        /* ===== RESPONSIVE — SMALL PHONE (≤ 400px) ===== */
+        @media (max-width: 400px) {
+            .lock-layout {
+                gap: 14px;
+                padding: 12px 8px;
+            }
+
+            .key-image {
+                width: 110px;
+            }
+
+            .lock-left-text {
+                font-size: 14px;
+                margin-top: 8px;
+            }
+
+            .lock-left-sub {
+                font-size: 11px;
+            }
+
+            .lock-right {
+                width: min(260px, 92vw);
+            }
+
+            .keypad-card {
+                padding: 18px 14px 16px;
+                border-radius: 20px;
+            }
+
+            .keypad-icon {
+                width: 42px;
+                margin-bottom: 6px;
+            }
+
+            .keypad-title {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+
+            .pin-dots {
+                gap: 10px;
+                margin-bottom: 14px;
+            }
+
+            .pin-dot {
+                width: 13px;
+                height: 13px;
+                border-width: 2px;
+            }
+
+            .numpad {
+                gap: 8px;
+            }
+
+            .numpad-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 20px;
+                border-width: 1.5px;
+            }
+
+            .numpad-btn.action {
+                font-size: 15px;
+            }
+
+            .error-msg {
+                font-size: 11px;
+            }
+
+            .lock-hint {
+                font-size: 10px;
+            }
+        }
+
+        /* ===== RESPONSIVE — LANDSCAPE PHONE ===== */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .lock-layout {
+                flex-direction: row;
+                gap: 24px;
+                padding: 12px 20px;
+                min-height: 100dvh;
+            }
+
+            .lock-left {
+                max-width: 35%;
+            }
+
+            .key-image {
+                width: clamp(90px, 18vh, 150px);
+            }
+
+            .lock-left-text {
+                font-size: 14px;
+                margin-top: 8px;
+            }
+
+            .lock-left-sub {
+                font-size: 11px;
+            }
+
+            .lock-right {
+                width: 260px;
+            }
+
+            .keypad-card {
+                padding: 14px 16px 12px;
+                border-radius: 20px;
+            }
+
+            .keypad-icon {
+                width: 36px;
+                margin-bottom: 4px;
+            }
+
+            .keypad-title {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .pin-dots {
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+
+            .pin-dot {
+                width: 12px;
+                height: 12px;
+                border-width: 2px;
+            }
+
+            .numpad {
+                gap: 5px;
+            }
+
+            .numpad-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                border-width: 1.5px;
+            }
+
+            .numpad-btn.action {
+                font-size: 14px;
+            }
+
+            .error-msg {
+                font-size: 11px;
+                margin-top: 6px;
+                min-height: 16px;
+            }
+
+            .lock-hint {
+                font-size: 10px;
+                margin-top: 4px;
+            }
+
+            .success-overlay .success-heart {
+                font-size: 50px;
+            }
+
+            .success-overlay .success-text {
+                font-size: 16px;
+                margin-top: 10px;
+            }
+        }
+
+        /* ===== RESPONSIVE — VERY TALL PHONES (narrow + tall) ===== */
+        @media (max-width: 360px) and (min-height: 600px) {
+            .key-image {
+                width: 100px;
+            }
+
+            .lock-right {
+                width: min(250px, 94vw);
+            }
+
+            .numpad-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+
+            .numpad {
+                gap: 7px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💕</div>
+        <div class="loading-text">Đang tải yêu thương...</div>
+    </div>
+
+    <!-- Floating Hearts Background -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Heart Burst Effect -->
+    <div class="heart-burst" id="heartBurst"></div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-heart">💖</div>
+        <div class="success-text">Chào mừng em đến! 💕</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="lock-layout">
+            <!-- LEFT — Key Image -->
+            <div class="lock-left">
+                <div class="lock-left-inner">
+                    <img src="assets/gif/Key/1.webp" alt="Chiếc chìa khóa trái tim" class="key-image">
+                    <div class="lock-left-text">Có một điều bí mật...</div>
+                    <div class="lock-left-sub">Nhập mật khẩu để mở trái tim 💕</div>
+                </div>
+            </div>
+
+            <!-- RIGHT — Keypad -->
+            <div class="lock-right">
+                <div class="keypad-card">
+                    <!-- Icon -->
+                    <img src="assets/images/key-icon.png" alt="" class="keypad-icon">
+
+                    <div class="keypad-title">Nhập mã PIN 💕</div>
+
+                    <!-- 4 Dots -->
+                    <div class="pin-dots" id="pinDots">
+                        <div class="pin-dot" data-index="0"></div>
+                        <div class="pin-dot" data-index="1"></div>
+                        <div class="pin-dot" data-index="2"></div>
+                        <div class="pin-dot" data-index="3"></div>
+                    </div>
+
+                    <!-- Number Pad -->
+                    <div class="numpad" id="numpad">
+                        <button class="numpad-btn" data-num="1">1</button>
+                        <button class="numpad-btn" data-num="2">2</button>
+                        <button class="numpad-btn" data-num="3">3</button>
+                        <button class="numpad-btn" data-num="4">4</button>
+                        <button class="numpad-btn" data-num="5">5</button>
+                        <button class="numpad-btn" data-num="6">6</button>
+                        <button class="numpad-btn" data-num="7">7</button>
+                        <button class="numpad-btn" data-num="8">8</button>
+                        <button class="numpad-btn" data-num="9">9</button>
+                        <button class="numpad-btn action" data-action="clear">✕</button>
+                        <button class="numpad-btn" data-num="0">0</button>
+                        <button class="numpad-btn action" data-action="delete">⌫</button>
+                    </div>
+
+                    <p class="error-msg" id="errorMsg">Sai rồi, thử lại nha~ 🥺</p>
+                    <p class="lock-hint">Gợi ý: <span>ngày 1 cá thể ra đời</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden input for keyboard support -->
+    <input type="text" id="passwordInput" style="position:absolute;opacity:0;pointer-events:none;" tabindex="-1">
+
+    <script src="js/lock.js"></script>
+</body>
+</html>

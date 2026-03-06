@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Khoảnh khắc của chúng mình</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* === GALLERY PAGE SPECIFIC === */
+        .gallery-page {
+            padding: 20px;
+            padding-top: 70px;
+            padding-bottom: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .photo-card {
+            background: white;
+            border-radius: 5px;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            position: relative;
+        }
+
+        .photo-card.visible {
+            opacity: 1;
+            transform: translateY(0) rotate(var(--rotation, 0deg));
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px) rotate(0deg) scale(1.03) !important;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .photo-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 3px;
+            display: block;
+        }
+
+        .photo-card .photo-caption {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .photo-card .photo-date {
+            text-align: center;
+            font-size: 11px;
+            color: var(--pink-accent);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Empty state */
+        .gallery-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .gallery-empty .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-empty h3 {
+            color: var(--pink-accent);
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .gallery-empty p {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* Placeholder photos (cute 2D style) */
+        .placeholder-photo {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--pink-pastel), var(--pink-soft));
+            border-radius: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .placeholder-photo .ph-icon {
+            font-size: 50px;
+        }
+
+        .placeholder-photo .ph-text {
+            font-size: 12px;
+            color: var(--pink-accent);
+            font-weight: 600;
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 75vh;
+            text-align: center;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 65vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-caption {
+            color: white;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .lightbox-date {
+            color: var(--pink-soft);
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .lightbox-nav.prev {
+            left: 20px;
+        }
+
+        .lightbox-nav.next {
+            right: 20px;
+        }
+
+        .lightbox-counter {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                padding: 5px;
+            }
+
+            .photo-card {
+                padding: 6px 6px 25px 6px;
+            }
+
+            .photo-card .photo-caption {
+                font-size: 11px;
+            }
+
+            .lightbox-nav {
+                padding: 8px 10px;
+                font-size: 20px;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💕</div>
+        <div class="loading-text">Đang tải yêu thương...</div>
+    </div>
+
+    <!-- Floating Hearts Background -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <button class="lightbox-nav prev" onclick="lightboxPrev()">‹</button>
+        <button class="lightbox-nav next" onclick="lightboxNext()">›</button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+            <div class="lightbox-date" id="lightboxDate"></div>
+            <div class="lightbox-counter" id="lightboxCounter"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="gallery-page">
+            <h1 class="page-title">📸 Khoảnh khắc của chúng mình</h1>
+            <p class="page-subtitle">Mỗi bức ảnh là một kỷ niệm đẹp</p>
+
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Photos rendered by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <a class="back-btn" href="javascript:void(0)" onclick="navigateWithCar('letter.html','backward')">
+        <span class="back-arrow">←</span> Quay lại
+    </a>
+
+    <script src="js/transition.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+</html>

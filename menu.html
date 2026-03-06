@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Dành cho em...</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* === MENU PAGE SPECIFIC === */
+        .menu-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px 40px;
+        }
+
+        /* Header */
+        .menu-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .menu-header .big-heart {
+            font-size: 70px;
+            display: block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin-bottom: 5px;
+        }
+
+        .menu-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--pink-accent);
+            margin-bottom: 8px;
+        }
+
+        .menu-header p {
+            font-size: 15px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Cards Container */
+        .menu-cards {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Individual Card */
+        .menu-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 22px 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 22px;
+            border: 2px solid rgba(255, 182, 193, 0.3);
+            box-shadow: 0 6px 25px rgba(255, 105, 180, 0.15);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        .menu-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .menu-card:hover::before {
+            left: 100%;
+        }
+
+        .menu-card:hover {
+            transform: translateX(8px);
+            border-color: var(--pink-accent);
+            box-shadow: 0 10px 35px rgba(255, 105, 180, 0.3);
+        }
+
+        .menu-card:active {
+            transform: translateX(4px) scale(0.98);
+        }
+
+        .menu-card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-card:nth-child(1) .menu-card-icon {
+            background: linear-gradient(135deg, #FFE0F0, #FFB6D9);
+        }
+        .menu-card:nth-child(2) .menu-card-icon {
+            background: linear-gradient(135deg, #E0F0FF, #B6D9FF);
+        }
+        .menu-card:nth-child(3) .menu-card-icon {
+            background: linear-gradient(135deg, #FFF0E0, #FFD9B6);
+        }
+
+        .menu-card-info {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-card-info h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .menu-card-info p {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .menu-card-arrow {
+            font-size: 22px;
+            color: var(--pink-main);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-card:hover .menu-card-arrow {
+            color: var(--pink-accent);
+            transform: translateX(5px);
+        }
+
+        /* ===== DECORATIVE CAR AT BOTTOM ===== */
+        .menu-car-decor {
+            margin-top: 45px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            height: 50px;
+        }
+
+        .road {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--pink-main) 0px,
+                var(--pink-main) 15px,
+                transparent 15px,
+                transparent 25px
+            );
+            border-radius: 2px;
+            opacity: 0.5;
+        }
+
+        .running-car {
+            position: absolute;
+            bottom: 10px;
+            font-size: 30px;
+            animation: carRun 6s ease-in-out infinite;
+            line-height: 1;
+        }
+
+        @keyframes carRun {
+            0% {
+                left: -40px;
+                transform: scaleX(1);
+            }
+            45% {
+                left: calc(100% + 10px);
+                transform: scaleX(1);
+            }
+            50% {
+                left: calc(100% + 10px);
+                transform: scaleX(-1);
+            }
+            95% {
+                left: -40px;
+                transform: scaleX(-1);
+            }
+            100% {
+                left: -40px;
+                transform: scaleX(1);
+            }
+        }
+
+        .car-trail {
+            position: absolute;
+            bottom: 20px;
+            font-size: 14px;
+            opacity: 0;
+            animation: trailFade 6s ease-in-out infinite;
+        }
+
+        .car-trail:nth-child(2) { animation-delay: 0.3s; }
+        .car-trail:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes trailFade {
+            0%, 100% { opacity: 0; }
+            10% { opacity: 0.5; }
+            30% { opacity: 0; }
+        }
+
+        /* Subtitle animation */
+        .menu-subtitle-mini {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 1.5s forwards;
+        }
+
+        /* Easter egg: hidden heart */
+        .easter-egg {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        .easter-egg:hover {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+
+        .easter-egg-msg {
+            position: fixed;
+            bottom: 45px;
+            right: 10px;
+            background: white;
+            padding: 10px 16px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+            font-size: 13px;
+            color: var(--pink-accent);
+            font-weight: 600;
+            z-index: 50;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .easter-egg-msg.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .menu-header .big-heart {
+                font-size: 55px;
+            }
+
+            .menu-header h1 {
+                font-size: 26px;
+            }
+
+            .menu-card {
+                padding: 18px 16px;
+                gap: 14px;
+            }
+
+            .menu-card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                border-radius: 14px;
+            }
+
+            .menu-card-info h3 {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💕</div>
+        <div class="loading-text">Đang tải yêu thương...</div>
+    </div>
+
+    <!-- Floating Hearts Background -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="menu-page">
+            <!-- Header -->
+            <div class="menu-header">
+                <span class="big-heart">💕</span>
+                <h1>Dành cho em</h1>
+                <p>Chọn một nơi em muốn đến nhé ~</p>
+            </div>
+
+            <!-- Menu Cards -->
+            <div class="menu-cards">
+                <div class="menu-card" onclick="navigateWithCar('music.html', 'forward')">
+                    <div class="menu-card-icon">🎵</div>
+                    <div class="menu-card-info">
+                        <h3>Nhạc yêu thương</h3>
+                        <p>Những bài hát anh dành cho em</p>
+                    </div>
+                    <div class="menu-card-arrow">→</div>
+                </div>
+
+                <div class="menu-card" onclick="navigateWithCar('gallery.html', 'forward')">
+                    <div class="menu-card-icon">🖼️</div>
+                    <div class="menu-card-info">
+                        <h3>Album kỷ niệm</h3>
+                        <p>Những khoảnh khắc đẹp của chúng mình</p>
+                    </div>
+                    <div class="menu-card-arrow">→</div>
+                </div>
+
+                <div class="menu-card" onclick="navigateWithCar('letter.html', 'forward')">
+                    <div class="menu-card-icon">💌</div>
+                    <div class="menu-card-info">
+                        <h3>Lá thư tình</h3>
+                        <p>Có vài điều anh muốn nói với em...</p>
+                    </div>
+                    <div class="menu-card-arrow">→</div>
+                </div>
+            </div>
+
+            <!-- Decorative Car -->
+            <div class="menu-car-decor">
+                <div class="road"></div>
+                <span class="running-car">🚗</span>
+                <span class="car-trail" style="left: 30%">💨</span>
+                <span class="car-trail" style="left: 50%">💨</span>
+                <span class="car-trail" style="left: 70%">💨</span>
+            </div>
+
+            <p class="menu-subtitle-mini">Nhấn vào để bắt đầu ~ 🌸</p>
+        </div>
+    </div>
+
+    <!-- Easter Egg -->
+    <div class="easter-egg" id="easterEgg" onclick="showEasterEgg()">🌸</div>
+    <div class="easter-egg-msg" id="easterEggMsg">Em là điều tuyệt vời nhất! 💕</div>
+
+    <script src="js/transition.js"></script>
+    <script>
+        // --- Auth Check ---
+        if (sessionStorage.getItem('unlocked') !== 'true') {
+            window.location.href = 'index.html';
+        }
+
+        // --- Loading Screen ---
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var loading = document.getElementById('loadingScreen');
+                if (loading) loading.classList.add('hidden');
+            }, 800);
+
+            // Staggered card entrance
+            var cards = document.querySelectorAll('.menu-card');
+            cards.forEach(function (card, i) {
+                setTimeout(function () {
+                    card.classList.add('visible');
+                }, 300 + i * 200);
+            });
+        });
+
+        // --- Floating Hearts ---
+        (function () {
+            var container = document.getElementById('heartsBg');
+            if (!container) return;
+            var hearts = ['💕', '💖', '🌸', '🩷', '✨', '🌷'];
+            for (var i = 0; i < 15; i++) {
+                var heart = document.createElement('span');
+                heart.classList.add('heart');
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 12 + 10) + 'px';
+                heart.style.animationDuration = (Math.random() * 8 + 7) + 's';
+                heart.style.animationDelay = (Math.random() * 10) + 's';
+                heart.style.opacity = Math.random() * 0.2 + 0.1;
+                container.appendChild(heart);
+            }
+        })();
+
+        // --- Easter Egg ---
+        function showEasterEgg() {
+            var msg = document.getElementById('easterEggMsg');
+            msg.classList.add('show');
+            setTimeout(function () {
+                msg.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

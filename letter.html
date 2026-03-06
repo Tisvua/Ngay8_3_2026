@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Lá thư gửi em</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* === LETTER PAGE SPECIFIC === */
+        .letter-page {
+            padding: 20px;
+            padding-top: 70px;
+            padding-bottom: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Envelope */
+        .envelope-container {
+            perspective: 1000px;
+            margin: 30px 0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .envelope {
+            width: 280px;
+            height: 200px;
+            position: relative;
+            transition: all 0.8s ease;
+        }
+
+        .envelope-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFE4E1, #FFF0F5);
+            border-radius: 10px;
+            border: 2px solid var(--pink-main);
+            position: relative;
+            box-shadow: 0 5px 25px rgba(255, 105, 180, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .envelope-body::before {
+            content: '💌';
+            font-size: 60px;
+            position: absolute;
+            transition: all 0.5s ease;
+        }
+
+        .envelope-label {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: var(--pink-accent);
+            font-weight: 600;
+            white-space: nowrap;
+            animation: bounce 2s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg, var(--pink-soft), var(--pink-pastel));
+            border-radius: 10px 10px 0 0;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            z-index: 3;
+            transition: transform 0.6s ease;
+            transform-origin: top center;
+            border: 2px solid var(--pink-main);
+        }
+
+        .envelope.opened .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope.opened .envelope-body::before {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* Heart stamp */
+        .envelope-stamp {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            z-index: 4;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        .envelope-container.hidden {
+            display: none;
+        }
+
+        /* Click hint */
+        .click-hint {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 13px;
+            margin-top: 50px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .click-hint.hidden {
+            display: none;
+        }
+
+        /* Letter Paper */
+        .letter-container {
+            display: none;
+            width: 100%;
+            max-width: 520px;
+            animation: letterSlideUp 0.8s ease forwards;
+        }
+
+        .letter-container.show {
+            display: block;
+        }
+
+        @keyframes letterSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .letter-paper {
+            background: #FFFAF5;
+            border-radius: 15px;
+            padding: 40px 35px;
+            box-shadow: 0 10px 50px rgba(255, 105, 180, 0.2);
+            border: 1px solid var(--pink-pastel);
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        /* Paper texture lines */
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 31px,
+                    rgba(255, 182, 193, 0.2) 31px,
+                    rgba(255, 182, 193, 0.2) 32px
+                );
+            background-position: 0 38px;
+            pointer-events: none;
+        }
+
+        /* Red margin line */
+        .letter-paper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 45px;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 105, 180, 0.15);
+            pointer-events: none;
+        }
+
+        .letter-greeting {
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            color: var(--pink-accent);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .letter-body {
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            line-height: 2;
+            color: var(--text-dark);
+            min-height: 200px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .letter-body .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 22px;
+            background: var(--pink-accent);
+            margin-left: 2px;
+            animation: blink 0.8s step-start infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .letter-signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+            color: var(--pink-accent);
+            text-align: right;
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            font-weight: 700;
+        }
+
+        .letter-signature.show {
+            opacity: 1;
+        }
+
+        .letter-heart {
+            text-align: center;
+            font-size: 40px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .letter-heart.show {
+            opacity: 1;
+            animation: heartbeat 1s ease-in-out infinite;
+        }
+
+        /* === Choice Modal === */
+        .choice-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 240, 245, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .choice-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .choice-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 28px;
+            padding: 40px 35px;
+            text-align: center;
+            box-shadow: 0 15px 60px rgba(255, 105, 180, 0.25);
+            border: 2px solid rgba(255, 182, 193, 0.4);
+            max-width: 360px;
+            width: 90vw;
+            transform: scale(0.8) translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .choice-modal.show .choice-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .choice-emoji {
+            font-size: 50px;
+            margin-bottom: 12px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .choice-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--pink-accent);
+            margin-bottom: 28px;
+        }
+
+        .choice-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .choice-buttons .btn-pink {
+            padding: 14px 24px;
+            font-size: 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s ease;
+            border: 2px solid var(--pink-accent);
+        }
+
+        .btn-replay {
+            background: transparent;
+            color: var(--pink-accent);
+        }
+
+        .btn-replay:hover {
+            background: rgba(255, 105, 180, 0.08);
+            transform: scale(1.03);
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, var(--pink-accent), var(--pink-deep));
+            color: white;
+            border-color: transparent !important;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.35);
+        }
+
+        .btn-continue:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 25px rgba(255, 105, 180, 0.45);
+        }
+
+        @media (max-width: 480px) {
+            .choice-card {
+                padding: 30px 24px;
+            }
+
+            .choice-emoji {
+                font-size: 40px;
+            }
+
+            .choice-text {
+                font-size: 16px;
+                margin-bottom: 22px;
+            }
+
+            .choice-buttons .btn-pink {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
+        /* Confetti */
+        .confetti-container .confetti-piece {
+            position: absolute;
+            top: -20px;
+            animation: confettiFall linear forwards;
+        }
+
+        @media (max-width: 480px) {
+            .envelope {
+                width: 230px;
+                height: 165px;
+            }
+
+            .letter-paper {
+                padding: 30px 25px;
+            }
+
+            .letter-greeting {
+                font-size: 24px;
+            }
+
+            .letter-body {
+                font-size: 17px;
+            }
+
+            .letter-signature {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💕</div>
+        <div class="loading-text">Đang tải yêu thương...</div>
+    </div>
+
+    <!-- Floating Hearts Background -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="letter-page">
+            <h1 class="page-title">💌 Lá thư gửi em</h1>
+            <p class="page-subtitle">Có những điều anh muốn nói với em...</p>
+
+            <!-- Envelope -->
+            <div class="envelope-container" id="envelopeContainer" onclick="openEnvelope()">
+                <div class="envelope" id="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="envelope-body"></div>
+                    <div class="envelope-stamp">💖</div>
+                </div>
+                <div class="envelope-label">Nhấn để mở thư 💕</div>
+            </div>
+
+            <p class="click-hint" id="clickHint">👆 Nhấn vào phong bì để mở nhé ~</p>
+
+            <!-- Letter -->
+            <div class="letter-container" id="letterContainer">
+                <div class="letter-paper">
+                    <div class="letter-greeting" id="letterGreeting"></div>
+                    <div class="letter-body" id="letterBody"><span class="cursor" id="typingCursor"></span></div>
+                    <div class="letter-signature" id="letterSignature">
+                        Yêu em nhiều,<br>
+                        💕 Người luôn yêu em
+                    </div>
+                </div>
+
+                <div class="letter-heart" id="letterHeart">💖</div>
+            </div>
+
+            <!-- Choice Modal -->
+            <div class="choice-modal" id="choiceModal">
+                <div class="choice-card">
+                    <div class="choice-emoji">💕</div>
+                    <p class="choice-text">Em muốn làm gì tiếp nè?</p>
+                    <div class="choice-buttons">
+                        <button class="btn-pink btn-replay" onclick="replayLetter()">🔄 Xem lại lá thư</button>
+                        <button class="btn-pink btn-continue" onclick="goToMusic()">🎵 Tiếp tục</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <script src="js/transition.js"></script>
+    <script src="js/letter.js"></script>
+</body>
+</html>
