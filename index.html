@@ -373,6 +373,20 @@
             }
         }
 
+        /* ===== NO SCROLL ON MOBILE ===== */
+        @media (max-width: 820px) {
+            html, body {
+                height: 100%;
+                overflow: hidden;
+                touch-action: none;
+            }
+
+            .page-wrapper {
+                height: 100%;
+                overflow: hidden;
+            }
+        }
+
         /* ===== RESPONSIVE — PHONE (≤ 600px) ===== */
         @media (max-width: 600px) {
             .lock-layout {

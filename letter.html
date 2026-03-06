@@ -7,6 +7,27 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* === BACKGROUND IMAGE (mobile-safe) === */
+        .bg-fixed {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: url('assets/images/5.jpg') center center / cover no-repeat;
+            pointer-events: none;
+        }
+
+        .bg-fixed::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 240, 245, 0.4);
+        }
+
+        .page-wrapper, .hearts-bg, .confetti-container {
+            position: relative;
+            z-index: 1;
+        }
+
         /* === LETTER PAGE SPECIFIC === */
         .letter-page {
             padding: 20px;
@@ -148,11 +169,13 @@
         }
 
         .letter-paper {
-            background: #FFFAF5;
+            background: rgba(255, 250, 245, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 40px 35px;
             box-shadow: 0 10px 50px rgba(255, 105, 180, 0.2);
-            border: 1px solid var(--pink-pastel);
+            border: 1px solid rgba(255, 182, 193, 0.5);
             position: relative;
             overflow: hidden;
             min-height: 400px;
@@ -196,6 +219,7 @@
             color: var(--pink-accent);
             margin-bottom: 20px;
             font-weight: 700;
+            text-shadow: 0 1px 4px rgba(255,255,255,0.8);
         }
 
         .letter-body {
@@ -206,6 +230,7 @@
             min-height: 200px;
             position: relative;
             z-index: 1;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.7);
         }
 
         .letter-body .cursor {
@@ -231,6 +256,7 @@
             opacity: 0;
             transition: opacity 0.5s ease;
             font-weight: 700;
+            text-shadow: 0 1px 4px rgba(255,255,255,0.8);
         }
 
         .letter-signature.show {
@@ -378,6 +404,7 @@
 
             .letter-paper {
                 padding: 30px 25px;
+                min-height: unset;
             }
 
             .letter-greeting {
@@ -386,10 +413,45 @@
 
             .letter-body {
                 font-size: 17px;
+                line-height: 1.8;
+                min-height: unset;
             }
 
             .letter-signature {
                 font-size: 20px;
+                margin-top: 16px;
+            }
+
+            .letter-heart {
+                margin-top: 10px;
+                font-size: 30px;
+            }
+        }
+
+        /* === MOBILE LAYOUT === */
+        @media (max-width: 820px) {
+            html, body {
+                overflow-x: hidden;
+            }
+
+            /* Block scroll only while envelope is showing */
+            body.envelope-phase {
+                overflow: hidden;
+                touch-action: none;
+                height: 100%;
+            }
+
+            .letter-page {
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
+
+            .envelope-container {
+                margin: 16px 0;
+            }
+
+            .letter-container.show {
+                display: block;
             }
         }
     </style>
@@ -400,6 +462,9 @@
         <div class="loading-heart">💕</div>
         <div class="loading-text">Đang tải yêu thương...</div>
     </div>
+
+    <!-- Background Image -->
+    <div class="bg-fixed"></div>
 
     <!-- Floating Hearts Background -->
     <div class="hearts-bg" id="heartsBg"></div>
@@ -436,7 +501,6 @@
                     </div>
                 </div>
 
-                <div class="letter-heart" id="letterHeart">💖</div>
             </div>
 
             <!-- Choice Modal -->

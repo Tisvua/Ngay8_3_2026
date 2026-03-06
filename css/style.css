@@ -374,9 +374,9 @@ body {
 }
 
 /* ============================================
-   🚗 CAR PAGE TRANSITION
+   🚗 CAR PAGE TRANSITION (disabled)
    ============================================ */
-.car-transition-overlay {
+.car-transition-overlay-disabled {
     position: fixed;
     top: 0;
     left: 0;

@@ -4,19 +4,15 @@
 
 // ====== CẤU HÌNH LÁ THƯ ======
 
-const LETTER_GREETING = "Gửi Chann,";
+const LETTER_GREETING = "Gửi người anh yêu thương nhất,";
 
-const LETTER_CONTENT = `Nhân ngày 8/3, có một người muốn gửi đến bạn vài lời…
+const LETTER_CONTENT = `Nhân ngày 8/3 này, anh muốn nói với em rằng — có em trong có lẽ là điều mắn nhất anh từng có cho đến nay.
 
-Chann à, bạn có biết không — chỉ cần là chính mình thôi, bạn đã đủ tuyệt vời rồi. Nụ cười của bạn có sức mạnh kỳ lạ lắm, nó có thể làm sáng cả một ngày u ám của ai đó.
+anh cũng không biết phải nói gì nhiều, chỉ muốn em biết rằng anh yêu em rất nhiều, và anh sẽ luôn ở đây để yêu thương và quan tâm em.
 
-Cuộc sống đôi khi sẽ mệt, sẽ có lúc bạn thấy mọi thứ quá nhiều — nhưng hãy nhớ rằng bạn đã rất giỏi rồi, đã rất cố gắng rồi. Đừng quên yêu thương bản thân mình nhé.
+Chúc em ngày 8/3 thật vui, luôn xinh đẹp và được yêu thương mỗi ngày nhé! 🌷`;
 
-Chúc Chann ngày 8/3 thật nhiều niềm vui, thật nhiều yêu thương và luôn được hạnh phúc theo cách mà bạn xứng đáng. 🌷
-
-Bạn xứng đáng được nhận những điều đẹp nhất! 💕`;
-
-const LETTER_SIGNATURE = "Gửi lời chúc từ trái tim,<br>💕 Một người luôn chúc bạn hạnh phúc";
+const LETTER_SIGNATURE = "Người yêu em mãi,<br>💕 Anh";
 
 const TYPING_SPEED = 45; // ms per character
 // ================================
@@ -32,6 +28,8 @@ window.addEventListener('load', () => {
         const loading = document.getElementById('loadingScreen');
         if (loading) loading.classList.add('hidden');
     }, 800);
+    // Lock scroll while envelope is visible
+    document.body.classList.add('envelope-phase');
 });
 
 // --- Floating Hearts ---
@@ -62,6 +60,9 @@ function openEnvelope() {
     const envelope = document.getElementById('envelope');
     const envelopeContainer = document.getElementById('envelopeContainer');
     const clickHint = document.getElementById('clickHint');
+
+    // Unlock scroll so letter content is readable on mobile
+    document.body.classList.remove('envelope-phase');
 
     // Open flap
     envelope.classList.add('opened');
@@ -161,10 +162,10 @@ function onLetterComplete() {
         launchConfetti();
     }, 1200);
 
-    // Show choice modal after confetti settles
+    // Show choice modal after letter finishes + 5s delay
     setTimeout(() => {
         document.getElementById('choiceModal').classList.add('show');
-    }, 3000);
+    }, 8000);
 }
 
 // --- Replay Letter ---
