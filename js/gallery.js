@@ -227,7 +227,7 @@ var wishes = [
     'Ngày 8/3 vui vẻ! 🥰',
     'Luôn rạng rỡ như hoa 🌺',
     'Thương em nhiều lắm 💗',
-    'Mãi là cô gái đáng yêu cảu anh 😘',
+    'Mãi là cô gái đáng yêu của anh nhaaaaa,Chann 😘',
     'yêu em 🎀'
 ];
 var wishInterval = null;
