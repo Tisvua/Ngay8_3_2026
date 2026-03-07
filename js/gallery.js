@@ -3,8 +3,8 @@
    Catch photos to view them!
    ============================================ */
 
-var SPECIAL_INDEX = 15; // photo 16
-var TOTAL = 16;
+var SPECIAL_INDEX = 26; // photo 16
+var TOTAL = 27;
 var photos = [];
 for (var i = 1; i <= TOTAL; i++) {
     photos.push({ src: 'assets/images/' + i + '.jpg', index: i });

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Happy Women's Day 8/3</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@1,700&family=Dancing+Script:wght@700&display=swap');
+
+        html, body {
+            overflow: hidden;
+            height: 100%; height: 100dvh;
+            margin: 0; padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 30%, #FFC0CB 70%, #FFB6C1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-wrapper {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+            width: 100%;
+            height: 100%; height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* === CANVAS for text drawing === */
+        .drawing-stage {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+        }
+
+        /* === SVG TEXT DRAWING ANIMATION === */
+        .draw-text {
+            overflow: visible;
+        }
+
+        .draw-text text {
+            font-family: 'Great Vibes', cursive;
+            fill: none;
+            stroke: #FF69B4;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .draw-text .line-happy {
+            font-size: 90px;
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+        }
+
+        .draw-text .line-women {
+            font-size: 62px;
+            stroke-dasharray: 1400;
+            stroke-dashoffset: 1400;
+        }
+
+        .draw-text .line-day {
+            font-size: 72px;
+            stroke-dasharray: 800;
+            stroke-dashoffset: 800;
+        }
+
+        .draw-text .line-date {
+            font-size: 100px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 700;
+            stroke-dasharray: 900;
+            stroke-dashoffset: 900;
+            stroke: #FF1493;
+            stroke-width: 2;
+        }
+
+        /* Draw animations */
+        .draw-text .line-happy.animate {
+            animation: drawStroke 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .draw-text .line-women.animate {
+            animation: drawStroke 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .draw-text .line-day.animate {
+            animation: drawStroke 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .draw-text .line-date.animate {
+            animation: drawStroke 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes drawStroke {
+            0% {
+                stroke-dashoffset: var(--dash-length, 1200);
+                fill: transparent;
+            }
+            70% {
+                stroke-dashoffset: 0;
+                fill: transparent;
+            }
+            100% {
+                stroke-dashoffset: 0;
+                fill: var(--fill-color, #FF69B4);
+            }
+        }
+
+        /* Fill-in after drawing */
+        .draw-text .line-happy.animate {
+            --dash-length: 1200;
+            --fill-color: #FF69B4;
+        }
+        .draw-text .line-women.animate {
+            --dash-length: 1400;
+            --fill-color: #FF69B4;
+        }
+        .draw-text .line-day.animate {
+            --dash-length: 800;
+            --fill-color: #FF69B4;
+        }
+        .draw-text .line-date.animate {
+            --dash-length: 900;
+            --fill-color: #FF1493;
+        }
+
+        /* === DECORATIVE ELEMENTS === */
+        .deco-heart {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .deco-heart.pop {
+            animation: heartPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes heartPop {
+            0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+            60% { transform: scale(1.3) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* === SPARKLE PARTICLES === */
+        .sparkle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        @keyframes sparkleRise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-80px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* === SUBTITLE (appears after drawing) === */
+        .thanks-subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(16px, 3vw, 22px);
+            color: var(--text-dark);
+            text-align: center;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateY(15px);
+            z-index: 5;
+            position: relative;
+            text-shadow: 0 1px 4px rgba(255,255,255,0.8);
+        }
+
+        .thanks-subtitle.show {
+            animation: subtitleIn 0.8s ease forwards;
+        }
+
+        @keyframes subtitleIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === RISING HEARTS BACKGROUND === */
+        .rising-hearts-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .rising-heart {
+            position: absolute;
+            bottom: -60px;
+            animation: riseHeart var(--hdur, 6s) ease-in infinite;
+            animation-delay: var(--hdelay, 0s);
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .rising-heart::before {
+            content: '';
+            display: block;
+            width: var(--hsize, 30px);
+            height: var(--hsize, 30px);
+            background: var(--hcolor, #FF69B4);
+            transform: rotate(45deg);
+            box-shadow: 0 0 12px var(--hglow, rgba(255,105,180,0.4));
+        }
+
+        .rising-heart::before {
+            border-radius: 50% 50% 0 50%;
+            position: relative;
+        }
+
+        /* Use pseudo-elements for real heart shape */
+        .rising-heart {
+            width: var(--hsize, 30px);
+            height: var(--hsize, 30px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--hsize, 30px);
+            line-height: 1;
+            filter: drop-shadow(0 0 8px var(--hglow, rgba(255,105,180,0.5)));
+        }
+
+        .rising-heart::before {
+            content: none;
+        }
+
+        @keyframes riseHeart {
+            0% {
+                bottom: -60px;
+                opacity: 0;
+                transform: translateX(0) scale(0.5) rotate(0deg);
+            }
+            10% {
+                opacity: var(--hopacity, 0.7);
+                transform: translateX(var(--hsway1, 15px)) scale(0.8) rotate(5deg);
+            }
+            30% {
+                transform: translateX(var(--hsway2, -20px)) scale(1) rotate(-8deg);
+            }
+            50% {
+                opacity: var(--hopacity, 0.7);
+                transform: translateX(var(--hsway3, 25px)) scale(1.05) rotate(5deg);
+            }
+            70% {
+                transform: translateX(var(--hsway4, -15px)) scale(0.95) rotate(-3deg);
+            }
+            90% {
+                opacity: 0.2;
+                transform: translateX(var(--hsway5, 10px)) scale(0.7) rotate(8deg);
+            }
+            100% {
+                bottom: 110vh;
+                opacity: 0;
+                transform: translateX(0) scale(0.3) rotate(0deg);
+            }
+        }
+
+        /* === GLOW RING behind text === */
+        .glow-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,182,193,0.25) 0%, transparent 70%);
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .glow-ring.show {
+            opacity: 1;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .draw-text .line-happy { font-size: 52px; }
+            .draw-text .line-women { font-size: 36px; }
+            .draw-text .line-day { font-size: 44px; }
+            .draw-text .line-date { font-size: 60px; }
+
+            .glow-ring {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .draw-text .line-happy { font-size: 42px; }
+            .draw-text .line-women { font-size: 28px; }
+            .draw-text .line-day { font-size: 36px; }
+            .draw-text .line-date { font-size: 48px; }
+        }
+
+        @media (min-width: 1200px) {
+            .draw-text .line-happy { font-size: 110px; }
+            .draw-text .line-women { font-size: 76px; }
+            .draw-text .line-day { font-size: 88px; }
+            .draw-text .line-date { font-size: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Rising Hearts Background -->
+    <div class="rising-hearts-bg" id="risingHearts"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💕</div>
+        <div class="loading-text">Đang chuẩn bị điều đặc biệt...</div>
+    </div>
+
+    <!-- Floating Hearts Background -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Glow Ring -->
+    <div class="glow-ring" id="glowRing"></div>
+
+    <!-- Main Content -->
+    <div class="page-wrapper">
+        <div class="drawing-stage" id="drawingStage">
+            <!-- SVG Text Drawing -->
+            <svg class="draw-text" id="svgText" viewBox="0 0 700 420" width="700" height="420" xmlns="http://www.w3.org/2000/svg">
+                <text class="line-happy" id="lineHappy" x="50%" y="100" text-anchor="middle">Happy</text>
+                <text class="line-women" id="lineWomen" x="50%" y="185" text-anchor="middle">Women's</text>
+                <text class="line-day" id="lineDay" x="50%" y="275" text-anchor="middle">Day</text>
+                <text class="line-date" id="lineDate" x="50%" y="390" text-anchor="middle">8 / 3</text>
+            </svg>
+
+            <p class="thanks-subtitle" id="subtitle">Cảm ơn em vì đã luôn tuyệt vời 💕</p>
+        </div>
+    </div>
+
+    <script src="js/transition.js"></script>
+    <script src="js/thanks.js"></script>
+</body>
+</html>

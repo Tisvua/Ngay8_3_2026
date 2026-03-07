@@ -370,6 +370,27 @@
     <!-- Floating Hearts Background -->
     <div class="hearts-bg" id="heartsBg"></div>
 
+    <!-- YouTube Music (ẩn) -->
+    <div id="ytPlayer" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
+    <script>
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+    var ytPlayer;
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('ytPlayer', {
+            videoId: 'flREuRJCdxw',
+            playerVars: { autoplay: 1, loop: 1, playlist: 'flREuRJCdxw', controls: 0, showinfo: 0, rel: 0, modestbranding: 1 },
+            events: { onReady: function(e) { e.target.playVideo(); } }
+        });
+    }
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && ytPlayer && ytPlayer.playVideo) {
+            try { ytPlayer.playVideo(); } catch(e) {}
+        }
+    });
+    </script>
+
     <!-- Header -->
     <div class="gallery-header">
         <h1>🌸 Người con gái tôi thương!</h1>
@@ -408,10 +429,11 @@
         function startHold() {
             btn.classList.add('holding');
             timer = setTimeout(function () {
-                window.open('', '_self');
-                window.close();
-                // Fallback: navigate to blank
-                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#1a1a2e;color:#fff;font-size:20px;font-family:sans-serif;">Cảm ơn bạn đã xem 💕</div>';
+                if (typeof navigateWithCar === 'function') {
+                    navigateWithCar('thanks.html', 'forward');
+                } else {
+                    window.location.href = 'thanks.html';
+                }
             }, 3000);
         }
         function cancelHold() {

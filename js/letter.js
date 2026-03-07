@@ -4,15 +4,15 @@
 
 // ====== CẤU HÌNH LÁ THƯ ======
 
-const LETTER_GREETING = "Gửi người anh yêu thương nhất,";
+const LETTER_GREETING = "Gửi người Tui yêu thương nhất,";
 
-const LETTER_CONTENT = `Nhân ngày 8/3 này, anh muốn nói với em rằng — có được em có lẽ là điều mắn nhất anh từng có cho đến nay.
+const LETTER_CONTENT = `Nhân ngày 8/3 này, Tui muốn nói với Chann rằng — có lẽ gặp được Chann là điều may mắn Tui có được.
 
-anh cũng không biết phải nói gì nhiều, chỉ muốn em biết rằng anh yêu em rất nhiều, và anh sẽ luôn ở đây để yêu thương và quan tâm em.
+Tui không giỏi ăn nói nên cũng không biết phải nói gì nhiều, chỉ muốn Chann biết rằng anh yêu em rất nhiều, và anh sẽ luôn ở đây để yêu thương và quan tâm em.
 
 Chúc em ngày 8/3 thật vui, luôn xinh đẹp và được yêu thương mỗi ngày nhé!`;
 
-const LETTER_SIGNATURE = "Người yêu em mãi,<br>💕 Anh";
+const LETTER_SIGNATURE = "Người yêu em,<br>💕 Giàu";
 
 const TYPING_SPEED = 45; // ms per character
 // ================================

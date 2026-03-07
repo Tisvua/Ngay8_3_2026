@@ -569,11 +569,32 @@
     <!-- Confetti Container -->
     <div class="confetti-container" id="confettiContainer"></div>
 
+    <!-- YouTube Music (ẩn) -->
+    <div id="ytPlayer" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
+    <script>
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+    var ytPlayer;
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('ytPlayer', {
+            videoId: 'HK_ozvD4GcQ',
+            playerVars: { autoplay: 1, loop: 1, playlist: 'HK_ozvD4GcQ', controls: 0, showinfo: 0, rel: 0, modestbranding: 1 },
+            events: { onReady: function(e) { e.target.playVideo(); } }
+        });
+    }
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && ytPlayer && ytPlayer.playVideo) {
+            try { ytPlayer.playVideo(); } catch(e) {}
+        }
+    });
+    </script>
+
     <!-- Main Content -->
     <div class="page-wrapper">
         <div class="letter-page">
-            <h1 class="page-title">💌 Lá thư gửi em</h1>
-            <p class="page-subtitle">Có những điều anh muốn nói với em...</p>
+            <h1 class="page-title">💌 Lá thư gửi Chann</h1>
+            <p class="page-subtitle">Có những điều Tui muốn nói với Chann...</p>
 
             <!-- Envelope -->
             <div class="envelope-container" id="envelopeContainer" onclick="openEnvelope()">
