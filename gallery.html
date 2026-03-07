@@ -2,247 +2,361 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>💕 Khoảnh khắc của chúng mình</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* === GALLERY PAGE SPECIFIC === */
-        .gallery-page {
-            padding: 20px;
-            padding-top: 70px;
-            padding-bottom: 40px;
-            max-width: 800px;
-            margin: 0 auto;
+        html, body {
+            overflow: hidden !important;
+            height: 100%; height: 100dvh;
+            margin: 0; padding: 0;
+            background: url('assets/images/16.jpg') center/cover no-repeat fixed;
+        }
+        .page-wrapper {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+            height: 100%; height: 100dvh;
         }
 
-        /* Gallery Grid */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            padding: 10px;
+        /* === FALLING ZONE (full screen) === */
+        .fall-zone {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            overflow: hidden;
         }
 
-        .photo-card {
-            background: white;
-            border-radius: 5px;
-            padding: 10px 10px 30px 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: all 0.4s ease;
-            opacity: 0;
-            transform: translateY(30px);
-            position: relative;
-        }
-
-        .photo-card.visible {
-            opacity: 1;
-            transform: translateY(0) rotate(var(--rotation, 0deg));
-        }
-
-        .photo-card:hover {
-            transform: translateY(-5px) rotate(0deg) scale(1.03) !important;
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
-        }
-
-        .photo-card img {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 3px;
-            display: block;
-        }
-
-        .photo-card .photo-caption {
+        /* === HEADER === */
+        .gallery-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 5;
             text-align: center;
-            margin-top: 12px;
-            font-size: 13px;
+            padding: 50px 10px 8px;
+            background: linear-gradient(to bottom, rgba(255,240,245,0.95) 60%, transparent);
+            pointer-events: none;
+        }
+        .gallery-header h1 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--pink-accent);
+            margin: 0;
+            text-shadow: 0 1px 4px rgba(255,255,255,0.8);
+        }
+        .gallery-header p {
+            font-size: 11px;
             color: var(--text-light);
+            margin: 3px 0 0;
             font-weight: 500;
         }
 
-        .photo-card .photo-date {
-            text-align: center;
-            font-size: 11px;
-            color: var(--pink-accent);
-            margin-top: 4px;
-            font-weight: 600;
+
+
+        /* === FALLING PHOTO (polaroid style) === */
+        .falling-photo {
+            position: absolute;
+            width: var(--pw, 90px);
+            cursor: pointer;
+            z-index: 3;
+            /* Start above viewport */
+            top: -160px;
+            left: var(--px, 50%);
+            transform: rotate(var(--prot, 0deg));
+            animation: photoDrift var(--pdur, 6s) linear forwards;
+            animation-delay: var(--pdelay, 0s);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Empty state */
-        .gallery-empty {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
+        .falling-photo .polaroid {
+            background: white;
+            padding: 6px;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.15s ease;
         }
 
-        .gallery-empty .empty-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
+        .falling-photo:active .polaroid {
+            transform: scale(1.1);
         }
 
-        .gallery-empty h3 {
-            color: var(--pink-accent);
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .gallery-empty p {
-            color: var(--text-light);
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        /* Placeholder photos (cute 2D style) */
-        .placeholder-photo {
+        .falling-photo .polaroid img {
             width: 100%;
             aspect-ratio: 1;
-            background: linear-gradient(135deg, var(--pink-pastel), var(--pink-soft));
-            border-radius: 3px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            object-fit: cover;
+            border-radius: 2px;
+            display: block;
         }
 
-        .placeholder-photo .ph-icon {
-            font-size: 50px;
+        .falling-photo .polaroid .photo-num {
+            display: none;
         }
 
-        .placeholder-photo .ph-text {
-            font-size: 12px;
-            color: var(--pink-accent);
-            font-weight: 600;
+        /* Special photo 16 */
+        .falling-photo.special .polaroid {
+            border: 2px solid var(--pink-accent);
+            box-shadow: 0 0 12px rgba(255,105,180,0.5), 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .falling-photo.special .badge {
+            position: absolute;
+            top: -8px; right: -8px;
+            font-size: 16px;
+            animation: heartPulse 1s ease-in-out infinite;
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
         }
 
-        /* ===== LIGHTBOX ===== */
-        .lightbox {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        /* Caught animation */
+        .falling-photo.caught {
+            animation: none !important;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(1.3) rotate(0deg) !important;
             opacity: 0;
-            visibility: hidden;
+            pointer-events: none;
+        }
+
+        @keyframes photoDrift {
+            0% {
+                top: -160px;
+                transform: rotate(var(--prot, 0deg)) translateX(0);
+                opacity: 0;
+            }
+            5% { opacity: 1; }
+            25% {
+                transform: rotate(calc(var(--prot, 0deg) + 8deg)) translateX(var(--psway, 25px));
+            }
+            50% {
+                transform: rotate(calc(var(--prot, 0deg) - 5deg)) translateX(calc(var(--psway, 25px) * -0.7));
+            }
+            75% {
+                transform: rotate(calc(var(--prot, 0deg) + 3deg)) translateX(calc(var(--psway, 25px) * 0.4));
+            }
+            95% { opacity: 0.8; }
+            100% {
+                top: 110vh;
+                transform: rotate(calc(var(--prot, 0deg) - 4deg)) translateX(0);
+                opacity: 0;
+            }
+        }
+
+        /* === FALLING FLOWERS === */
+        .flower {
+            position: absolute;
+            z-index: 1;
+            top: -40px;
+            font-size: var(--fsize, 18px);
+            opacity: 0;
+            pointer-events: none;
+            animation: flowerDrift var(--fdur, 5s) linear forwards;
+            animation-delay: var(--fdelay, 0s);
+        }
+        @keyframes flowerDrift {
+            0% { opacity: 0; top: -40px; transform: rotate(0deg) translateX(0); }
+            8% { opacity: 0.7; }
+            30% { transform: rotate(120deg) translateX(var(--fsway, 20px)); }
+            60% { transform: rotate(240deg) translateX(calc(var(--fsway, 20px) * -0.8)); }
+            92% { opacity: 0.4; }
+            100% { opacity: 0; top: 105vh; transform: rotate(400deg) translateX(var(--fsway, 20px)); }
+        }
+
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* === LIGHTBOX === */
+        .lightbox {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 10000;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
             transition: all 0.3s ease;
         }
-
-        .lightbox.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .lightbox.active { opacity: 1; visibility: visible; }
         .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            font-size: 30px;
-            cursor: pointer;
-            padding: 5px 12px;
-            border-radius: 50%;
-            color: white;
-            transition: var(--transition);
-            z-index: 10;
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(255,255,255,0.15); border: none;
+            font-size: 26px; cursor: pointer; padding: 4px 11px;
+            border-radius: 50%; color: white; z-index: 10;
         }
-
-        .lightbox-close:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
         .lightbox-content {
-            max-width: 90%;
-            max-height: 75vh;
-            text-align: center;
+            max-width: 92%; max-height: 80dvh; text-align: center;
         }
-
         .lightbox-content img {
-            max-width: 100%;
-            max-height: 65vh;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-width: 100%; max-height: 70dvh;
+            object-fit: contain; border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-
         .lightbox-caption {
-            color: white;
-            margin-top: 15px;
-            font-size: 16px;
-            font-weight: 600;
+            display: none;
         }
-
-        .lightbox-date {
-            color: var(--pink-soft);
-            margin-top: 5px;
-            font-size: 13px;
-        }
-
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 10px 14px;
-            border-radius: 50%;
-            color: white;
-            transition: var(--transition);
-        }
-
-        .lightbox-nav:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .lightbox-nav.prev {
-            left: 20px;
-        }
-
-        .lightbox-nav.next {
-            right: 20px;
-        }
-
         .lightbox-counter {
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 10px;
+            display: none;
+        }
+        .lightbox-special-badge {
+            display: none; margin-top: 8px; font-size: 12px;
+            color: var(--pink-accent); font-weight: 700; letter-spacing: 1px;
+        }
+        .lightbox-special-badge.show {
+            display: block; animation: heartPulse 1.5s ease-in-out infinite;
+        }
+
+        /* === CUTE STICKERS on lightbox === */
+        .lightbox-sticker {
+            position: absolute;
+            z-index: 11;
+            pointer-events: none;
+        }
+        .lightbox-sticker img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+            animation: stickerPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes stickerPop {
+            0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        /* Position variants */
+        .lightbox-sticker.pos-bottom-right {
+            bottom: 12%; right: 8%;
+        }
+        .lightbox-sticker.pos-bottom-left {
+            bottom: 12%; left: 8%;
+        }
+        .lightbox-sticker.pos-bottom-center {
+            bottom: 10%; left: 50%; transform: translateX(-50%);
+        }
+        @media (max-width: 500px) {
+            .lightbox-sticker img { width: 85px; height: 85px; }
+            .lightbox-sticker.pos-bottom-right { bottom: 15%; right: 5%; }
+            .lightbox-sticker.pos-bottom-left { bottom: 15%; left: 5%; }
+            .lightbox-sticker.pos-bottom-center { bottom: 13%; }
+        }
+
+        /* === FALLING WISHES in lightbox === */
+        .falling-wish {
+            position: fixed;
+            z-index: 10002;
+            pointer-events: none;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            top: -160px;
+            animation: wishFall var(--wdur, 5s) linear forwards;
+            animation-delay: var(--wdelay, 0s);
+        }
+        .falling-wish img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
+        .falling-wish span {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.5), 0 0 12px rgba(255,105,180,0.6);
+        }
+        @keyframes wishFall {
+            0% { top: -160px; opacity: 0; transform: translateX(0) rotate(0deg); }
+            5% { opacity: 1; }
+            25% { transform: translateX(var(--wsway, 20px)) rotate(3deg); }
+            50% { transform: translateX(calc(var(--wsway, 20px) * -0.6)) rotate(-2deg); }
+            75% { transform: translateX(calc(var(--wsway, 20px) * 0.3)) rotate(1deg); }
+            90% { opacity: 0.7; }
+            100% { top: 105vh; opacity: 0; transform: translateX(0) rotate(0deg); }
+        }
+        @media (max-width: 500px) {
+            .falling-wish img { width: 40px; height: 40px; }
+            .falling-wish span { font-size: 14px; }
+        }
+
+        /* === BOTTOM DECORATIVE GIFS === */
+        .bottom-deco {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 3;
+            display: flex;
+            pointer-events: none;
+            animation: decoScroll 12s linear infinite;
+            white-space: nowrap;
+        }
+        .bottom-deco img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        @keyframes decoScroll {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        @media (max-width: 500px) {
+            .bottom-deco img { width: 140px; height: 140px; }
+        }
+
+        @media (min-width: 600px) {
+            .gallery-header h1 { font-size: 22px; }
+            .gallery-header p { font-size: 14px; }
+        }
+        @media (max-height: 600px) {
+            .gallery-header { padding-top: 42px; }
+            .gallery-header h1 { font-size: 14px; }
+            .gallery-header p { display: none; }
+        }
+
+        /* === END BUTTON (hold 3s to close) === */
+        .end-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,105,180,0.85);
+            color: #fff;
             font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255,105,180,0.4);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
-
-        @media (max-width: 600px) {
-            .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-                padding: 5px;
-            }
-
-            .photo-card {
-                padding: 6px 6px 25px 6px;
-            }
-
-            .photo-card .photo-caption {
-                font-size: 11px;
-            }
-
-            .lightbox-nav {
-                padding: 8px 10px;
-                font-size: 20px;
-            }
+        .end-btn svg {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 64px;
+            height: 64px;
+            transform: rotate(-90deg);
         }
-
-        @media (min-width: 601px) {
-            .gallery-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        .end-btn svg circle {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 3;
+            stroke-dasharray: 176;
+            stroke-dashoffset: 176;
+            stroke-linecap: round;
+        }
+        .end-btn.holding svg circle {
+            animation: endFill 3s linear forwards;
+        }
+        @keyframes endFill {
+            0% { stroke-dashoffset: 176; }
+            100% { stroke-dashoffset: 0; }
         }
     </style>
 </head>
@@ -256,37 +370,66 @@
     <!-- Floating Hearts Background -->
     <div class="hearts-bg" id="heartsBg"></div>
 
+    <!-- Header -->
+    <div class="gallery-header">
+        <h1>🌸 Người con gái tôi thương!</h1>
+        <p>Bắt lấy để ngắm nha~</p>
+    </div>
+
+    <!-- Falling Zone -->
+    <div class="fall-zone" id="fallZone"></div>
+
+    <!-- Bottom Decorative Gifs -->
+    <div class="bottom-deco" id="bottomDeco"></div>
+
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-        <button class="lightbox-nav prev" onclick="lightboxPrev()">‹</button>
-        <button class="lightbox-nav next" onclick="lightboxNext()">›</button>
         <div class="lightbox-content">
             <img id="lightboxImg" src="" alt="">
-            <div class="lightbox-caption" id="lightboxCaption"></div>
-            <div class="lightbox-date" id="lightboxDate"></div>
-            <div class="lightbox-counter" id="lightboxCounter"></div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="page-wrapper">
-        <div class="gallery-page">
-            <h1 class="page-title">📸 Khoảnh khắc của chúng mình</h1>
-            <p class="page-subtitle">Mỗi bức ảnh là một kỷ niệm đẹp</p>
-
-            <div class="gallery-grid" id="galleryGrid">
-                <!-- Photos rendered by JS -->
-            </div>
+            <div class="lightbox-special-badge" id="lightboxBadge">💖💖</div>
         </div>
     </div>
 
     <!-- Back Button -->
-    <a class="back-btn" href="javascript:void(0)" onclick="navigateWithCar('letter.html','backward')">
-        <span class="back-arrow">←</span> Quay lại
-    </a>
+
+    <!-- End Button -->
+    <button class="end-btn" id="endBtn">
+        <svg><circle cx="32" cy="32" r="28"></circle></svg>
+        END
+    </button>
 
     <script src="js/transition.js"></script>
     <script src="js/gallery.js"></script>
+    <script>
+    (function () {
+        var btn = document.getElementById('endBtn');
+        var timer = null;
+        function startHold() {
+            btn.classList.add('holding');
+            timer = setTimeout(function () {
+                window.open('', '_self');
+                window.close();
+                // Fallback: navigate to blank
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#1a1a2e;color:#fff;font-size:20px;font-family:sans-serif;">Cảm ơn bạn đã xem 💕</div>';
+            }, 3000);
+        }
+        function cancelHold() {
+            btn.classList.remove('holding');
+            if (timer) { clearTimeout(timer); timer = null; }
+            // Reset animation
+            var circle = btn.querySelector('circle');
+            circle.style.animation = 'none';
+            void circle.offsetWidth;
+            circle.style.animation = '';
+        }
+        btn.addEventListener('mousedown', startHold);
+        btn.addEventListener('touchstart', function (e) { e.preventDefault(); startHold(); });
+        btn.addEventListener('mouseup', cancelHold);
+        btn.addEventListener('mouseleave', cancelHold);
+        btn.addEventListener('touchend', cancelHold);
+        btn.addEventListener('touchcancel', cancelHold);
+    })();
+    </script>
 </body>
 </html>

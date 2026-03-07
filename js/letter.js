@@ -6,11 +6,11 @@
 
 const LETTER_GREETING = "Gửi người anh yêu thương nhất,";
 
-const LETTER_CONTENT = `Nhân ngày 8/3 này, anh muốn nói với em rằng — có em trong có lẽ là điều mắn nhất anh từng có cho đến nay.
+const LETTER_CONTENT = `Nhân ngày 8/3 này, anh muốn nói với em rằng — có được em có lẽ là điều mắn nhất anh từng có cho đến nay.
 
 anh cũng không biết phải nói gì nhiều, chỉ muốn em biết rằng anh yêu em rất nhiều, và anh sẽ luôn ở đây để yêu thương và quan tâm em.
 
-Chúc em ngày 8/3 thật vui, luôn xinh đẹp và được yêu thương mỗi ngày nhé! 🌷`;
+Chúc em ngày 8/3 thật vui, luôn xinh đẹp và được yêu thương mỗi ngày nhé!`;
 
 const LETTER_SIGNATURE = "Người yêu em mãi,<br>💕 Anh";
 
@@ -67,12 +67,23 @@ function openEnvelope() {
     // Open flap
     envelope.classList.add('opened');
 
-    // After flap opens, hide envelope and show letter
+    // Hide cute gif
+    var preGif = document.getElementById('preEnvelopeGif');
+    if (preGif) preGif.classList.add('hidden');
+
+    // Hide hint
+    clickHint.classList.add('hidden');
+
+    // After flap opens, fade out envelope
+    setTimeout(() => {
+        envelopeContainer.classList.add('fade-out');
+    }, 700);
+
+    // After fade out, hide envelope and show letter
     setTimeout(() => {
         envelopeContainer.classList.add('hidden');
-        clickHint.classList.add('hidden');
         showLetter();
-    }, 1000);
+    }, 1500);
 }
 
 // --- Show Letter ---
@@ -162,16 +173,16 @@ function onLetterComplete() {
         launchConfetti();
     }, 1200);
 
-    // Show choice modal after letter finishes + 5s delay
-    setTimeout(() => {
-        document.getElementById('choiceModal').classList.add('show');
-    }, 8000);
+    // Show NEXT button immediately when letter finishes
+    var nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) nextBtn.classList.add('show');
 }
 
 // --- Replay Letter ---
 function replayLetter() {
-    // Hide choice modal
-    document.getElementById('choiceModal').classList.remove('show');
+    // Hide NEXT button
+    var nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) nextBtn.classList.remove('show');
 
     // Clear everything
     if (typingTimeout) clearTimeout(typingTimeout);
@@ -197,24 +208,19 @@ function replayLetter() {
     }, 500);
 }
 
-// --- Go to Music Page ---
+// --- Go to Gallery Page ---
 function goToMusic() {
-    // Hide modal first
-    document.getElementById('choiceModal').classList.remove('show');
-
-    setTimeout(() => {
-        if (typeof navigateWithCar === 'function') {
-            navigateWithCar('music.html', 'forward');
-        } else {
-            window.location.href = 'music.html';
-        }
-    }, 300);
+    if (typeof navigateWithCar === 'function') {
+        navigateWithCar('gallery.html', 'forward');
+    } else {
+        window.location.href = 'gallery.html';
+    }
 }
 
 // --- Heart Confetti ---
 function launchConfetti() {
     const container = document.getElementById('confettiContainer');
-    const pieces = ['💖', '💕', '💗', '💓', '🌸', '🩷', '✨', '💝', '🎀', '🌷'];
+    const pieces = [, '💕', '💗', '💓', '😚', '🩷', '✨', '💝', '😘'];
 
     for (let i = 0; i < 50; i++) {
         const piece = document.createElement('span');

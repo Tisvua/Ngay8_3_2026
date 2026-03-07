@@ -4,7 +4,7 @@
 
 // ====== CẤU HÌNH MẬT KHẨU (4 số) ======
 // 👉 Thay đổi mật khẩu tại đây
-const SECRET_PASSWORD = "0803";
+const SECRET_PASSWORD = "1301";
 const PIN_LENGTH = 4;
 // ========================================
 

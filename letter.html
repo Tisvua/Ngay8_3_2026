@@ -7,6 +7,76 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* === HOLD NEXT BUTTON === */
+        .hold-next-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,105,180,0.85);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255,105,180,0.4);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            z-index: 9999;
+        }
+        .hold-next-btn.show {
+            display: flex;
+        }
+        .hold-next-btn svg {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 64px;
+            height: 64px;
+            transform: rotate(-90deg);
+        }
+        .hold-next-btn svg circle {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 3;
+            stroke-dasharray: 176;
+            stroke-dashoffset: 176;
+            stroke-linecap: round;
+        }
+        .hold-next-btn.holding svg circle {
+            animation: holdFill 3s linear forwards;
+        }
+        @keyframes holdFill {
+            0% { stroke-dashoffset: 176; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        /* === CUTE GIF before envelope opens === */
+        .pre-envelope-gif {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 5;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .pre-envelope-gif img {
+            width: 240px;
+            height: 240px;
+            object-fit: contain;
+        }
+        .pre-envelope-gif.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         /* === BACKGROUND IMAGE (mobile-safe) === */
         .bg-fixed {
             position: fixed;
@@ -47,6 +117,17 @@
             margin: 30px 0;
             cursor: pointer;
             position: relative;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope-container.fade-out {
+            opacity: 0;
+            transform: scale(0.5) translateY(-40px);
+            pointer-events: none;
+        }
+
+        .envelope-container.hidden {
+            display: none;
         }
 
         .envelope {
@@ -115,7 +196,14 @@
 
         .envelope.opened .envelope-body::before {
             opacity: 0;
-            transform: scale(0);
+            transform: translateY(-30px) scale(1.3);
+            transition: all 0.6s ease;
+        }
+
+        .envelope.opened .envelope-stamp {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease 0.2s;
         }
 
         /* Heart stamp */
@@ -139,10 +227,12 @@
             font-size: 13px;
             margin-top: 50px;
             animation: fadeInUp 0.6s ease forwards;
+            transition: opacity 0.5s ease;
         }
 
         .click-hint.hidden {
-            display: none;
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* Letter Paper */
@@ -160,16 +250,16 @@
         @keyframes letterSlideUp {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(80px) scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
         .letter-paper {
-            background: rgba(255, 250, 245, 0.65);
+            background: rgba(255, 250, 245, 0.45);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 15px;
@@ -441,6 +531,13 @@
                 height: 100%;
             }
 
+            body.envelope-phase .letter-page {
+                min-height: 100vh;
+                justify-content: center;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
             .letter-page {
                 padding-top: 30px;
                 padding-bottom: 30px;
@@ -488,7 +585,12 @@
                 <div class="envelope-label">Nhấn để mở thư 💕</div>
             </div>
 
-            <p class="click-hint" id="clickHint">👆 Nhấn vào phong bì để mở nhé ~</p>
+            <p class="click-hint" id="clickHint"></p>
+
+    <!-- Cute gif before envelope opens -->
+    <div class="pre-envelope-gif" id="preEnvelopeGif">
+        <img src="assets/gif/Cute/9.webp" alt="">
+    </div>
 
             <!-- Letter -->
             <div class="letter-container" id="letterContainer">
@@ -503,20 +605,47 @@
 
             </div>
 
-            <!-- Choice Modal -->
-            <div class="choice-modal" id="choiceModal">
-                <div class="choice-card">
-                    <div class="choice-emoji">💕</div>
-                    <p class="choice-text">Em muốn làm gì tiếp nè?</p>
-                    <div class="choice-buttons">
-                        <button class="btn-pink btn-replay" onclick="replayLetter()">🔄 Xem lại lá thư</button>
-                        <button class="btn-pink btn-continue" onclick="goToMusic()">🎵 Tiếp tục</button>
-                    </div>
-                </div>
         </div>
     </div>
 
+    <!-- Hold NEXT button (fixed bottom center) -->
+    <button class="hold-next-btn" id="nextBtn">
+        <svg><circle cx="32" cy="32" r="28"></circle></svg>
+        NEXT
+    </button>
+
     <script src="js/transition.js"></script>
     <script src="js/letter.js"></script>
+    <script>
+    (function () {
+        var btn = document.getElementById('nextBtn');
+        if (!btn) return;
+        var timer = null;
+        function startHold() {
+            btn.classList.add('holding');
+            timer = setTimeout(function () {
+                if (typeof navigateWithCar === 'function') {
+                    navigateWithCar('gallery.html', 'forward');
+                } else {
+                    window.location.href = 'gallery.html';
+                }
+            }, 3000);
+        }
+        function cancelHold() {
+            btn.classList.remove('holding');
+            if (timer) { clearTimeout(timer); timer = null; }
+            var circle = btn.querySelector('circle');
+            circle.style.animation = 'none';
+            void circle.offsetWidth;
+            circle.style.animation = '';
+        }
+        btn.addEventListener('mousedown', startHold);
+        btn.addEventListener('touchstart', function (e) { e.preventDefault(); startHold(); });
+        btn.addEventListener('mouseup', cancelHold);
+        btn.addEventListener('mouseleave', cancelHold);
+        btn.addEventListener('touchend', cancelHold);
+        btn.addEventListener('touchcancel', cancelHold);
+    })();
+    </script>
 </body>
 </html>
