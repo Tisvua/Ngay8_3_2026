@@ -364,6 +364,27 @@
         </div>
     </div>
 
+    <!-- YouTube Music (ẩn) -->
+    <div id="ytPlayer" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;"></div>
+    <script>
+    var tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+    var ytPlayer;
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('ytPlayer', {
+            videoId: 'TKlXc3iywoM',
+            playerVars: { autoplay: 1, loop: 1, playlist: 'TKlXc3iywoM', controls: 0, showinfo: 0, rel: 0, modestbranding: 1 },
+            events: { onReady: function(e) { e.target.playVideo(); } }
+        });
+    }
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && ytPlayer && ytPlayer.playVideo) {
+            try { ytPlayer.playVideo(); } catch(e) {}
+        }
+    });
+    </script>
+
     <script src="js/transition.js"></script>
     <script src="js/thanks.js"></script>
 </body>
